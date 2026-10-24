@@ -1,0 +1,31 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Php2Shell\Command\ScanCommand;
+use Symfony\Component\Console\Application;
+
+$autoloadCandidates = [
+	__DIR__ . '/../vendor/autoload.php',
+	__DIR__ . '/../../../autoload.php', // when installed as a dependency
+];
+
+$loaded = false;
+foreach ($autoloadCandidates as $candidate) {
+	if (is_file($candidate)) {
+		require $candidate;
+		$loaded = true;
+		break;
+	}
+}
+
+if (!$loaded) {
+	fwrite(STDERR, "php2shell: cannot locate Composer autoloader. Run 'composer install'.\n");
+	exit(3);
+}
+
+$app = new Application('php2shell-php', '1.0.0');
+$app->add(new ScanCommand());
+$app->setDefaultCommand('scan', true);
+$app->run();

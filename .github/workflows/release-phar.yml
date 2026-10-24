@@ -1,0 +1,44 @@
+name: Release PHAR
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: json, openssl, sockets
+          tools: composer, box
+          coverage: none
+
+      - name: Validate composer.json/composer.lock are in sync
+        run: composer validate --strict --no-check-publish
+
+      - name: Install dependencies (no dev)
+        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+      - name: Build PHAR
+        run: box compile --verbose
+
+      - name: Smoke-test the PHAR
+        run: |
+          chmod +x build/php2shell.phar
+          php build/php2shell.phar --version
+
+      - name: Attach PHAR to the release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/php2shell.phar
+          generate_release_notes: true

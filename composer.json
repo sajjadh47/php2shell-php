@@ -1,0 +1,60 @@
+{
+	"name": "sajjadh47/php2shell-php",
+	"version": "1.0.0",
+	"description": "Detect php2shell (CVE-2026-109618 / CVE-2026-109619) on remote PHP targets — behavioral multipart probes, version fallback, async CLI in PHP.",
+	"type": "library",
+	"license": "MIT",
+	"keywords": ["security", "scanner", "php", "cve", "php2shell"],
+	"homepage": "https://github.com/sajjadh47/php2shell-php",
+	"support": {
+		"issues": "https://github.com/sajjadh47/php2shell-php/issues",
+		"source": "https://github.com/sajjadh47/php2shell-php"
+	},
+	"authors": [
+		{ "name": "sajjadh47" }
+	],
+	"require": {
+		"php": ">=8.2",
+		"ext-json": "*",
+		"ext-openssl": "*",
+		"ext-sockets": "*",
+		"amphp/amp": "^3.0",
+		"amphp/http-client": "^5.0",
+		"amphp/socket": "^2.0",
+		"symfony/console": "^6.4 || ^7.0"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^10.5",
+		"phpstan/phpstan": "^2.2",
+		"friendsofphp/php-cs-fixer": "^3.0"
+	},
+	"autoload": {
+		"psr-4": { "Php2Shell\\": "src/" }
+	},
+	"autoload-dev": {
+		"psr-4": { "Php2Shell\\Tests\\": "tests/" }
+	},
+	"bin": ["bin/php2shell"],
+	"scripts": {
+		"test": "php -d memory_limit=512M vendor/bin/phpunit",
+		"stan": "phpstan analyse",
+		"lint": "find src tests -name '*.php' -print0 | xargs -0 -n1 php -l && php -l bin/php2shell",
+		"cs": "php-cs-fixer fix --dry-run --diff",
+		"cs-fix": "php-cs-fixer fix",
+		"check": [
+			"composer validate --strict --no-check-publish",
+			"composer audit",
+			"@lint",
+			"@stan",
+			"@cs",
+			"@test"
+		]
+	},
+	"config": {
+		"sort-packages": true,
+		"optimize-autoloader": true,
+		"allow-plugins": {
+			"php-http/discovery": true
+		}
+	}
+}

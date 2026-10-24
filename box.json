@@ -1,0 +1,31 @@
+{
+	"$schema": "https://raw.githubusercontent.com/box-project/box/master/res/schema.json",
+	"alias": "php2shell.phar",
+	"main": "bin/php2shell",
+	"output": "build/php2shell.phar",
+	"directories": [
+		"src"
+	],
+	"files": [
+		"composer.json",
+		"LICENSE"
+	],
+	"finder": [
+		{
+			"name": "*.php",
+			"exclude": [
+				"test",
+				"tests",
+				"doc",
+				"docs",
+				"example",
+				"examples"
+			],
+			"in": "vendor"
+		}
+	],
+	"compression": "GZ",
+	"chmod": "0755",
+	"check-requirements": true,
+	"banner": "php2shell-php (https://github.com/sajjadh47/php2shell-php)\nCVE-2026-109618 / CVE-2026-109619 scanner — MIT License\nAuthorized use only; see the Legal section of the README."
+}
